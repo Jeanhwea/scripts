@@ -26,7 +26,6 @@ def dorename(folder):
         os.rename(name, md5name)
 
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="rename all the files in the list of folders to their md5sum")
     parser.add_argument("folders", nargs='+', help="list of searched folders")
