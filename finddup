@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import sys
+import os
+import hashlib
+import argparse
+
+def getfilesize(filepath):
+    return os.stat(filepath).st_size
+
+def getfilemd5(filepath):
+    with open(filepath,'rb') as f:
+        md5obj = hashlib.md5()
+        while True:
+            bits = f.read(8096)
+            if not bits: break
+            md5obj.update(bits)
+        return md5obj.hexdigest()
+
+def getduplicates(folders, minisize=0):
+    filesizes = {}
+    for folder in folders:
+        for root, dirnames, filenames in os.walk(folder):
+            for filename in filenames:
+                filepath = os.path.join(root, filename)
+                filesize = getfilesize(filepath)
+                if filesize >= minisize:
+                    filesizes.setdefault(filesize, []).append(filepath)
+
+    duplicates = []
+    for files in [flist for flist in filesizes.values() if len(flist)>1]:
+        fileinfo = {}
+        for filepath in files:
+            filehash = getfilemd5(filepath)
+            if filehash not in fileinfo:
+                fileinfo.setdefault(filehash, []).append(filepath)
+            else:
+                fileinfo[filehash].append(filepath)
+        for duplicate in [duplicate for duplicate in  fileinfo.values() if len(duplicate)>1]:
+            duplicates.append(duplicate)
+
+    return duplicates
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="find duplicated files in a list of folders")
+    parser.add_argument("-s", "--size", type=int, default=0, help="the minimum size of searched file")
+    parser.add_argument("folders", nargs='+', help="list of searched folders")
+    args = parser.parse_args()
+
+    for duplist in getduplicates(args.folders, args.size):
+        for filename in duplist:
+            print filename
+        print 80*'-'
