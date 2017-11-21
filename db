@@ -28,11 +28,13 @@ __connect_mysql() {
 
 __help() {
     echo "usage: db number or db filename"
+    echo "--------------------------------------------------"
     local i=1
     for filename in `ls $MYSQL_CONFIG_PATH`; do
-        echo "$i) -> $filename"
+        echo "$i)	-> $filename"
         (( i++ ))
     done
+    echo "--------------------------------------------------"
 }
 
 __enter_mysql() {

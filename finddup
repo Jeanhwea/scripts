@@ -48,7 +48,9 @@ if __name__ == '__main__':
     parser.add_argument("folders", nargs='+', help="list of searched folders")
     args = parser.parse_args()
 
+    count = 0
     for duplist in getduplicates(args.folders, args.size):
+        count += 1
+        print "%s  %d  %s" % (35*'-', count, 35*'-')
         for filename in duplist:
             print filename
-        print 80*'-'
