@@ -2,10 +2,10 @@
 HERE=`dirname $(realpath $0)`
 
 __normalmod() {
-	local folder=$1
-	[ ! -d $folder ] && return ;
-	sudo chmod -R 755 $folder
-	find $folder -type f -print0 | sudo xargs -0 chmod -x
+    local folder=$1
+    [ ! -d $folder ] && return ;
+    sudo chmod -R 755 $folder
+    find $folder -type f -print0 | sudo xargs -0 chmod -x
 }
 
 __help() {
