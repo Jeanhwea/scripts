@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 HERE=`cd $(dirname $0); pwd`
 
-__check_repo() {
-    local folder=$1
-    cd $folder
-    if [[ ! -z "$(git status --porcelain)" ]]; then
-        dirty_repos+=("$folder")
-    fi
-}
-
 __update_repo() {
     local folder=$1
     cd $folder
@@ -24,10 +16,14 @@ __pull_all() {
     local DEFAULT="\033[00m"
 
     local base=`cd $1; pwd`
+    # check if all repositories are clean
     dirty_repos=()
     for dotgit in `find $base -type d -name '.git'`; do
         folder=`dirname $dotgit`
-        __check_repo $folder
+        cd $folder
+        if [[ ! -z "$(git status --porcelain)" ]]; then
+            dirty_repos+=("$folder")
+        fi
     done
     if [[ ${#dirty_repos[@]} -ne 0 ]]; then
         echo 'repositories is not clean'
@@ -36,6 +32,7 @@ __pull_all() {
         done
         exit -1
     fi
+    # update all repositories
     for dotgit in `find $base -type d -name '.git'`; do
         folder=`dirname $dotgit`
         __update_repo $folder
