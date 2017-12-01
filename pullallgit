@@ -1,42 +1,50 @@
 #!/usr/bin/env bash
 HERE=`cd $(dirname $0); pwd`
 
-BRED="\033[01;31m"
-BBLUE="\033[01;34m"
-BGREEN="\033[01;32m"
-DEFAULT="\033[00m"
-
-dirty_repos=()
-_check_repo() {
+__check_repo() {
     local folder=$1
     cd $folder
     if [[ ! -z "$(git status --porcelain)" ]]; then
         dirty_repos+=("$folder")
     fi
 }
-for dotgit in `find $HERE -type d -name '.git'`; do
-    folder=`dirname $dotgit`
-    _check_repo $folder
-done
-if [[ ${#dirty_repos[@]} -ne 0 ]]; then
-    echo 'repositories is not clean'
-    for repo in ${dirty_repos[@]}; do
-        echo -e "$BBLUE==>$DEFAULT $BRED$repo$DEFAULT"
-    done
-    exit -1
-fi
 
-
-_update_repo() {
+__update_repo() {
     local folder=$1
     cd $folder
     echo -e "$BBLUE==>$DEFAULT $BGREEN$folder$DEFAULT"
     git pull
     git gc
 }
-for dotgit in `find $HERE -type d -name '.git'`; do
-    folder=`dirname $dotgit`
-    _update_repo $folder
-done
+
+__pull_all() {
+    local BRED="\033[01;31m"
+    local BBLUE="\033[01;34m"
+    local BGREEN="\033[01;32m"
+    local DEFAULT="\033[00m"
+
+    local base=`cd $1; pwd`
+    dirty_repos=()
+    for dotgit in `find $base -type d -name '.git'`; do
+        folder=`dirname $dotgit`
+        __check_repo $folder
+    done
+    if [[ ${#dirty_repos[@]} -ne 0 ]]; then
+        echo 'repositories is not clean'
+        for repo in ${dirty_repos[@]}; do
+            echo -e "$BBLUE==>$DEFAULT $BRED$repo$DEFAULT"
+        done
+        exit -1
+    fi
+    for dotgit in `find $base -type d -name '.git'`; do
+        folder=`dirname $dotgit`
+        __update_repo $folder
+    done
+}
+
+__help() {
+    echo "usage: pullallgit folder"
+}
 
 
+[ $# -ne 1 ] && __help || __pull_all $1
