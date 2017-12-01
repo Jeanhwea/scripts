@@ -9,7 +9,7 @@ __normalmod() {
 }
 
 __help() {
-	echo "usage: normalmod folder"
+    echo "usage: normalmod folder"
 }
 
 
