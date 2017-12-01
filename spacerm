@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 
 __spacerm() {
-	local src=`mktemp /tmp/src.XXXXXX`
-	local des=`mktemp /tmp/des.XXXXXX`
-	ls | grep ' ' | sed 's/\"/\\\"/g' | sed 's/^/"/;s/$/"/' > $src
-	cat $src | sed 's/ //g' > $des
-	paste $src $des | sed 's/^/mv /'
-	rm $src $des
+    local src=`mktemp /tmp/src.XXXXXX`
+    local des=`mktemp /tmp/des.XXXXXX`
+    ls | grep ' ' | sed 's/\"/\\\"/g' | sed 's/^/"/;s/$/"/' > $src
+    cat $src | sed 's/ //g' > $des
+    paste $src $des | sed 's/^/mv /'
+    rm $src $des
 }
 
 __spacerm
