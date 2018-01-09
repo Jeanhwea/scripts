@@ -16,7 +16,7 @@ def getchange(base, goal):
     return change
 
 
-def show(base, goal, change):
+def bcalc(base, goal, change):
 
     if (base != None) and (goal != None):
         change = getchange(base, goal)
@@ -39,5 +39,5 @@ if __name__ == '__main__':
     parser.add_argument("-c", "--change", type=float)
     args = parser.parse_args()
 
-    show(args.base, args.goal, args.change)
+    bcalc(args.base, args.goal, args.change)
 
