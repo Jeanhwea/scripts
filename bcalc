@@ -26,7 +26,7 @@ def show(base, goal, change):
         base = getbase(goal, change)
 
     if (base != None) and (goal != None) and (change != None):
-        print("base: %f, goal: %f, change: %f" % (base, goal, change))
+        print("base: %f, goal: %f, change: %.2f%%" % (base, goal, 100*change))
     else:
         print('missing parameter, at least give two parameters of "base", "goal", "change"')
 
