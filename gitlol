@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+while :
+do
+  clear
+  git --no-pager log --graph --oneline --decorate --all
+  sleep 2
+done

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# check first
+if [[ ! -z "$(git status --porcelain)" ]]; then
+  echo 'repositories is not clean'
+  exit -1
+fi
+
+
+# generate n commits in folder
+_gencommit() {
+  local folder=$1
+  local n=$2
+  local i=0
+  mkdir -p $folder
+  while [[ ! "$i" == "$n" ]]; do
+    filename=$(mktemp $folder'/temp.XXX')
+    git add $filename
+    git commit -m "add [$filename]"
+    (( i++ ))
+  done
+}
+
+if [[ $# -eq 1 ]] &&  [[ $1 =~ ^[0-9]+$ ]]; then
+  _gencommit $(date +'%H/%M/%S') $1
+else
+  _gencommit $(date +'%H/%M/%S') 3
+fi
+
