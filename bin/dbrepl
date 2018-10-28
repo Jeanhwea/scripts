@@ -1,0 +1,79 @@
+#!/usr/bin/env sh
+HERE=`cd $(dirname $0); pwd`
+
+dbcfgfile=$HOME/.config/mysql/mysql.txt2
+dbconf=()
+
+__loaddbconf() {
+  if [ ! -f $dbcfgfile ]; then
+    echo "configuration file [$dbcfgfile] NOT FOUND!      "
+    echo "Please add config like this:                    "
+    echo "                                                "
+    echo "dbID:username:password:host:port:database       "
+    echo "dbID2:username2:password2:host2:port2:database2 "
+    echo "                                                "
+    exit 2
+  fi
+
+  i=1
+  while IFS="" read -ra line; do
+    dbconf+=("$i:$line")
+    (( i++ ))
+  done < "$dbcfgfile"
+}
+__loaddbconf
+
+
+# __connectdb username password host port database
+__connectdb() {
+  # echo "> mysql --user=$1 --password=$2 --host=$3 --port=$4 $5"
+  if [ -x "$(command -v mycli)" ]; then
+    mycli --user=$1 --password=$2 --host=$3 --port=$4 $5
+  elif [ -x "$(command -v mysql)" ]; then
+    mysql --user=$1 --password=$2 --host=$3 --port=$4 $5
+  else
+    echo "Install a database client first!"
+    exit -1
+  fi
+}
+
+__connectbynumber() {
+  for line in ${dbconf[@]}; do
+    IFS=":" read -ra dbargs <<< "$line"
+    if [ "$1" == "${dbargs[0]}" ]; then
+      __connectdb ${dbargs[2]} ${dbargs[3]} ${dbargs[4]} ${dbargs[5]} ${dbargs[6]}
+    fi
+  done
+}
+
+__connectbydbID() {
+  for line in ${dbconf[@]}; do
+    IFS=":" read -ra dbargs <<< "$line"
+    if [ "$1" == "${dbargs[1]}" ]; then
+      __connectdb ${dbargs[2]} ${dbargs[3]} ${dbargs[4]} ${dbargs[5]} ${dbargs[6]}
+    fi
+  done
+}
+
+__dbrepl() {
+  key=$1
+  if [[ $key =~ ^[0-9]+ ]]; then
+    # if the key is number
+    __connectbynumber $key
+  else
+    # otherwise, the key is dbID
+    __connectbydbID $key
+  fi
+}
+
+__help() {
+  echo "usage: db [<number>|<dbID>]"
+  echo "-------------------------------------------------------------------------"
+  for line in ${dbconf[@]}; do
+    IFS=":" read -ra dbargs <<< "$line"
+    echo "${dbargs[0]}) -> ${dbargs[1]}"
+  done
+  echo "-------------------------------------------------------------------------"
+}
+
+[[ $# -ne 1 ]] && __help || __dbrepl $1
