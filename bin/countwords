@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+HERE=`cd $(dirname $0); pwd`
+
+__countwords() {
+  # validate basedir
+  if [ ! -d "$1" ]; then
+    echo "$BRED$1$DEFAULT is not exists!"
+    exit -1
+  fi
+  basedir=`cd $1; pwd`
+  iname=$2
+  maxdisplay=20
+  if [ "$#" == "3" ]; then
+    maxdisplay=$3
+  fi
+
+  # count words
+  find $basedir -type f -iname "$iname" -exec cat {} + \
+    | tr -c '[:alnum:]' '[\n*]'                        \
+    | sed '/^$/d'                                      \
+    | sort                                             \
+    | uniq -c                                          \
+    | sort -nr                                         \
+    | head -$maxdisplay
+
+}
+
+__help() {
+    echo "usage: countwords <basedir> <iname> [<maxdisplay=20>]"
+}
+
+[ $# -lt 2 ] && __help || __countwords $*
+

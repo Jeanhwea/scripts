@@ -7,11 +7,16 @@ __git_update() {
   local BGREEN="\033[01;32m"
   local DEFAULT="\033[00m"
 
-  allrepos=()
-  dirtyrepos=()
+  # validate basedir
+  if [ ! -d "$1" ]; then
+    echo "$BRED$1$DEFAULT is not exists!"
+    exit -1
+  fi
+  basedir=`cd $1; pwd`
 
   # check if all repositories are clean
-  basedir=`cd $1; pwd`
+  allrepos=()
+  dirtyrepos=()
   for dotgit in `find $basedir -type d -name '.git'`; do
     repodir=`dirname $dotgit`
     allrepos+=("$repodir")
@@ -42,7 +47,7 @@ __git_update() {
 }
 
 __help() {
-  echo "usage: gitupdate folder"
+  echo "usage: gitupdate <basedir>"
 }
 
 
