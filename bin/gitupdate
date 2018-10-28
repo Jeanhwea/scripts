@@ -1,0 +1,49 @@
+#!/usr/bin/env sh
+HERE=`cd $(dirname $0); pwd`
+
+__git_update() {
+  local BRED="\033[01;31m"
+  local BBLUE="\033[01;34m"
+  local BGREEN="\033[01;32m"
+  local DEFAULT="\033[00m"
+
+  allrepos=()
+  dirtyrepos=()
+
+  # check if all repositories are clean
+  basedir=`cd $1; pwd`
+  for dotgit in `find $basedir -type d -name '.git'`; do
+    repodir=`dirname $dotgit`
+    allrepos+=("$repodir")
+    cd $repodir
+    if [[ ! -z "$(git status --porcelain)" ]]; then
+      dirtyrepos+=("$repodir")
+    fi
+  done
+  if [[ ${#dirtyrepos[@]} -ne 0 ]]; then
+    echo "Find dirty repositories, please make them clean first!!!"
+    local i=1
+    for repo in ${dirtyrepos[@]}; do
+      echo "[$i/${#dirtyrepos[@]}] $BBLUE==>$DEFAULT $BRED$repo$DEFAULT"
+      (( i++ ))
+    done
+    exit -1
+  fi
+
+  # update all repositories
+  echo "update $BGREEN${#allrepos[@]}$DEFAULT repositories in $BBLUE$basedir$DEFAULT"
+  local i=1
+  for repodir in ${allrepos[@]}; do
+    cd $repodir
+    echo "[$i/${#allrepos[@]}] $BBLUE==>$DEFAULT $BGREEN$repodir$DEFAULT"
+    git pull
+    (( i++ ))
+  done
+}
+
+__help() {
+  echo "usage: gitupdate folder"
+}
+
+
+[ $# -ne 1 ] && __help || __git_update $1
