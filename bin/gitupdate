@@ -1,11 +1,25 @@
 #!/usr/bin/env sh
 HERE=`cd $(dirname $0); pwd`
 
+__setcolor() {
+  # turn color on zsh
+  if [ ! -z "$ZSH" ]; then
+    BRED="\033[01;31m"
+    BBLUE="\033[01;34m"
+    BGREEN="\033[01;32m"
+    DEFAULT="\033[00m"
+  else
+    BRED=""
+    BBLUE=""
+    BGREEN=""
+    DEFAULT=""
+  fi
+}
+
 __git_update() {
-  local BRED="\033[01;31m"
-  local BBLUE="\033[01;34m"
-  local BGREEN="\033[01;32m"
-  local DEFAULT="\033[00m"
+
+  # switch color
+  __setcolor
 
   # validate basedir
   if [ ! -d "$1" ]; then
@@ -21,7 +35,7 @@ __git_update() {
     repodir=`dirname $dotgit`
     allrepos+=("$repodir")
     cd $repodir
-    if [[ ! -z "$(git status --porcelain)" ]]; then
+    if [ ! -z "$(git status --porcelain)" ]; then
       dirtyrepos+=("$repodir")
     fi
   done
