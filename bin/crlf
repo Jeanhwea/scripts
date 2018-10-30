@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+PARENT=`cd $(dirname $0); cd ..; pwd`
+
+python "$PARENT/python/crlf.py" $*
