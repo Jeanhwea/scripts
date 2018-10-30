@@ -57,13 +57,13 @@ class FindDupCLI:
     for i in range(len(self.duplist)):
       if self.maxnum > 0 and i > self.maxnum: break
       print('[{i}/{n}] ===> {size}'.format(
-        i=i,
+        i=i+1,
         n=len(self.duplist),
         size=self.getfilesize(self.duplist[i][0])
       ))
       for j in range(len(self.duplist[i])):
         print('{j}. {name}'.format(
-          j=j, name=self.duplist[i][j]
+          j=j+1, name=self.duplist[i][j]
         ))
 
 
