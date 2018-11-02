@@ -3,7 +3,7 @@ HERE=`cd $(dirname $0); pwd`
 
 __setcolor() {
   # turn color on zsh and cygwin
-  if [ ! -z "$ZSH" ] || [ "$TERM" == "cygwin" ]; then
+  if [ ! -z "$ZSH" ] || [ "$TERM" == "cygwin" ] || [ "$TERM" == "xterm" ]; then
     BRED="\033[01;31m"
     BBLUE="\033[01;34m"
     BGREEN="\033[01;32m"
