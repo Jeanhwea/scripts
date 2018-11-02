@@ -2,8 +2,8 @@
 HERE=`cd $(dirname $0); pwd`
 
 __setcolor() {
-  # turn color on zsh
-  if [ ! -z "$ZSH" ]; then
+  # turn color on zsh and cygwin
+  if [ ! -z "$ZSH" ] || [ "$TERM" == "cygwin" ]; then
     BRED="\033[01;31m"
     BBLUE="\033[01;34m"
     BGREEN="\033[01;32m"
@@ -23,7 +23,7 @@ __git_update() {
 
   # validate basedir
   if [ ! -d "$1" ]; then
-    echo "$BRED$1$DEFAULT is not exists!"
+    echo -e "$BRED$1$DEFAULT is not exists!"
     exit -1
   fi
   basedir=`cd $1; pwd`
@@ -43,18 +43,18 @@ __git_update() {
     echo "Find dirty repositories, please make them clean first!!!"
     local i=1
     for repo in ${dirtyrepos[@]}; do
-      echo "[$i/${#dirtyrepos[@]}] $BBLUE==>$DEFAULT $BRED$repo$DEFAULT"
+      echo -e "[$i/${#dirtyrepos[@]}] $BBLUE==>$DEFAULT $BRED$repo$DEFAULT"
       (( i++ ))
     done
     exit -1
   fi
 
   # update all repositories
-  echo "update $BGREEN${#allrepos[@]}$DEFAULT repositories in $BBLUE$basedir$DEFAULT"
+  echo -e "update $BGREEN${#allrepos[@]}$DEFAULT repositories in $BBLUE$basedir$DEFAULT"
   local i=1
   for repodir in ${allrepos[@]}; do
     cd $repodir
-    echo "[$i/${#allrepos[@]}] $BBLUE==>$DEFAULT $BGREEN$repodir$DEFAULT"
+    echo -e "[$i/${#allrepos[@]}] $BBLUE==>$DEFAULT $BGREEN$repodir$DEFAULT"
     git pull
     (( i++ ))
   done
