@@ -1,0 +1,8 @@
+#+TITLE: 一些有用的脚本
+#+AUTHOR: Jinghui Hu
+#+EMAIL: hujinghui@buaa.edu.cn
+#+DATE: <2018-11-02 Fri>
+#+TAGS: tag1 tag2 tag3
+
+
+* starting here
