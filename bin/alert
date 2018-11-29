@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+HERE=`cd $(dirname $0); pwd`
+#
+# osascript mac/alertmessage.applescript <args>
+# Sound name are listed in '/System/Library/Sounds'
+#
+
+__alert() {
+  local title=$*
+  local text=`date +'%Y-%m-%d %H:%M:%S'`
+  osascript -e "display notification \"${text}\" with title \"${title}\" sound name \"Pop\""
+}
+
+__alert $*
