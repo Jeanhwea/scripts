@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 import argparse
 import tempfile
-import sys
 import os
+
 
 class CrlfCLI:
 
-  LF   = b'\n'
+  LF = b'\n'
   CRLF = b'\r\n'
   NULL = b'\0'
 
@@ -17,13 +17,11 @@ class CrlfCLI:
     self.folders = args.folders
     self.filelist = []
 
-
   def mktemp(self, data):
     tf = tempfile.NamedTemporaryFile(mode='wb', suffix='txt', delete=False)
     tf.write(data)
     tf.close()
     return tf.name
-
 
   def readdata(self, filename):
     f = open(filename, 'rb')
@@ -36,10 +34,10 @@ class CrlfCLI:
     f.write(data)
     f.close()
 
-
   def tounix(self, filename):
     data = self.readdata(filename)
-    if self.NULL in data: return
+    if self.NULL in data:
+      return
     newdata = data.replace(self.CRLF, self.LF)
     notunix = (newdata != data)
     if notunix:
@@ -47,10 +45,10 @@ class CrlfCLI:
       if self.force:
         self.writedata(filename, newdata)
 
-
   def towindows(self, filename):
     data = self.readdata(filename)
-    if self.NULL in data: return
+    if self.NULL in data:
+      return
     tempdata = data.replace(self.CRLF, self.NULL)
     notwindows = (tempdata.find(self.LF) >= 0)
     if notwindows:
@@ -58,7 +56,6 @@ class CrlfCLI:
       newdata = data.replace(self.CRLF, self.LF).replace(self.LF, self.CRLF)
       if self.force:
         self.writedata(filename, newdata)
-
 
   def apply(self):
     if not self.force:
@@ -75,15 +72,15 @@ class CrlfCLI:
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(
-    description="crlf line ending in a list of folders"
+      description="crlf line ending in a list of folders"
   )
   parser.add_argument(
-    "-f", "--force", action="store_true",
-    help="force to replace files, otherwise just dry run!"
+      "-f", "--force", action="store_true",
+      help="force to replace files, otherwise just dry run!"
   )
   parser.add_argument(
-    "-t", "--to", type=str, choices=["unix", "windows"],
-    help="change line ending to unix or windows style, default unix!"
+      "-t", "--to", type=str, choices=["unix", "windows"],
+      help="change line ending to unix or windows style, default unix!"
   )
   parser.add_argument("folders", nargs='+', help="list of folders")
   args = parser.parse_args()

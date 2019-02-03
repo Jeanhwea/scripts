@@ -3,7 +3,7 @@
 import argparse
 import hashlib
 import os
-import sys
+
 
 class RenameCLI:
 
@@ -17,7 +17,8 @@ class RenameCLI:
     with open(filepath, 'rb') as f:
       while True:
         bits = f.read(8096)
-        if not bits: break
+        if not bits:
+          break
         obj.update(bits)
     return obj.hexdigest()
 
@@ -35,23 +36,22 @@ class RenameCLI:
         for filename in files:
           filepath = os.path.join(root, filename)
           md5dict[filepath] = '{name}{ext}'.format(
-            name=os.path.join(root, self.getfilemd5(filepath)),
-            ext=os.path.splitext(filepath)[1]
+              name=os.path.join(root, self.getfilemd5(filepath)),
+              ext=os.path.splitext(filepath)[1]
           )
       self.movefiles(md5dict)
 
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(
-    description="rename all the files in the list of folders to their md5sum"
+      description="rename all the files in the list of folders to their md5sum"
   )
   parser.add_argument(
-    "-f", "--force", action="store_true",
-    help="force to rename files, otherwise just dry run!"
+      "-f", "--force", action="store_true",
+      help="force to rename files, otherwise just dry run!"
   )
   parser.add_argument("folders", nargs='+', help="list of folders")
   args = parser.parse_args()
 
   cli = RenameCLI(args)
   cli.apply()
-
