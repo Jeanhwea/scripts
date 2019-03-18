@@ -16,9 +16,9 @@ class GitRepoCLI:
       )
       repos = requests.get(url).json()
       for repo in repos:
-        print("{name}: {desc}".format(
-            name=repo["name"],
-            desc=repo["description"]
+        print(u'{name}: {desc}'.format(
+            name=repo['name'],
+            desc=repo['description']
         ))
 
   def apply(self):
