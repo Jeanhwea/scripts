@@ -47,18 +47,17 @@ def add_parser(args):
 
 def gen_output(args):
   indent = '  ' * args.indent_level
-  lines = map(lambda x: indent + x, add_parser(args))
-  return "\n".join(lines)
+  return "\n".join(map(lambda x: indent + x, add_parser(args)))
 
 
 if __name__ == '__main__':
   # codetta: start
   # python pyargs.py -i 1 \
-  #   -d 'gen argument parser for python' \
+  #   -d 'genenrate argument parser for python' \
   #   i/indent-level d:description
   # codetta: output
   import argparse
-  parser = argparse.ArgumentParser(description='gen argument parser for python')
+  parser = argparse.ArgumentParser(description='genenrate argument parser for python')
   parser.add_argument('-i', '--indent-level', type=int, default=0)
   parser.add_argument('-d', '--description', type=str)
   parser.add_argument('rest', nargs='+')
