@@ -56,7 +56,7 @@ if __name__ == '__main__':
   # python pyargs.py -i 1 \
   #   -d 'gen argument parser for python' \
   #   i/indent-level d:description
-  # Codetta: output
+  # codetta: output
   import argparse
   parser = argparse.ArgumentParser(description='gen argument parser for python')
   parser.add_argument('-i', '--indent-level', type=int, default=0)
