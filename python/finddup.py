@@ -6,7 +6,7 @@ import hashlib
 class FindDupCLI:
 
   def __init__(self, args):
-    self.folders = args.rest
+    self.folders = args.rests
     self.minisize = args.minisize
     self.max_print_count = args.max_print_count
     self.duplist = []
@@ -70,7 +70,7 @@ class FindDupCLI:
 
 if __name__ == '__main__':
   # codetta: start
-  # python pyargs.py -i 1 \
+  # python pyargs.py -r -i 1 \
   #    -d 'find duplicated Files in a list of folders' \
   #    m/minisize n/max-print-count
   # codetta: output
@@ -78,7 +78,7 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='find duplicated Files in a list of folders')
   parser.add_argument('-m', '--minisize', type=int, default=0)
   parser.add_argument('-n', '--max-print-count', type=int, default=0)
-  parser.add_argument('rest', nargs='+')
+  parser.add_argument('rests', nargs='+')
   args = parser.parse_args()
   # codetta: end
 

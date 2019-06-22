@@ -13,7 +13,7 @@ class CrlfCLI:
   def __init__(self, args):
     self.force = args.force
     self.to_dos = args.to_dos
-    self.folders = args.rest
+    self.folders = args.rests
     self.filelist = []
 
   def mktemp(self, data):
@@ -71,13 +71,12 @@ class CrlfCLI:
 
 if __name__ == '__main__':
   # codetta: start
-  # python pyargs.py -i 1 -d 'crlf line ending in a list of folders' fforce tto-dos
+  # python pyargs.py -r -i 1 -d 'crlf line ending in a list of folders' fforce tto-dos
   # codetta: output
   import argparse
   parser = argparse.ArgumentParser(description='crlf line ending in a list of folders')
   parser.add_argument('-f', '--force', action='store_true')
   parser.add_argument('-t', '--to-dos', action='store_true')
-  parser.add_argument('rest', nargs='+')
   args = parser.parse_args()
   # codetta: end
 

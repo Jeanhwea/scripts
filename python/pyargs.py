@@ -13,8 +13,6 @@ args = parser.parse_args()
 
 def add_args(name):
   "fflag for boolean, s:string for string, n/number for int"
-  if name is None:
-    return "parser.add_argument('rest', nargs='+')"
 
   if len(name) <= 2:
     return "parser.add_argument('-{short_name}')".format(short_name=name[0])
@@ -48,9 +46,12 @@ def add_parser(args):
     lines.append("parser = argparse.ArgumentParser(description='{desc}')".format(desc=args.description))
   else:
     lines.append("parser = argparse.ArgumentParser()")
-  for name in args.rest:
+  for name in args.rests:
     lines.append(add_args(name))
-  lines.append(add_args(None))
+  if args.rest:
+    lines.append("parser.add_argument('rests', nargs='+')")
+  else:
+    lines.append("parser.add_argument('rests', nargs='*')")
   lines.append("args = parser.parse_args()")
   return lines
 
@@ -62,14 +63,14 @@ def gen_output(args):
 
 if __name__ == '__main__':
   # codetta: start
-  # python pyargs.py -i 1 -d 'genenrate argument parser for python' i/indent-level=0 d:description s:single
+  # python pyargs.py -i 1 -d 'genenrate argument parser for python' i/indent-level=0 d:description rrest
   # codetta: output
   import argparse
   parser = argparse.ArgumentParser(description='genenrate argument parser for python')
   parser.add_argument('-i', '--indent-level', type=int, default=0)
   parser.add_argument('-d', '--description', type=str)
-  parser.add_argument('-s', '--single', type=str)
-  parser.add_argument('rest', nargs='+')
+  parser.add_argument('-r', '--rest', action='store_true')
+  parser.add_argument('rests', nargs='*')
   args = parser.parse_args()
   # codetta: end
 
