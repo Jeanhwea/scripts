@@ -2,15 +2,13 @@
 # -*- coding: utf-8 -*-
 import os
 import hashlib
-import argparse
-
 
 class FindDupCLI:
 
   def __init__(self, args):
-    self.folders = args.folders
+    self.folders = args.rest
     self.minisize = args.minisize
-    self.maxnum = args.maxnum
+    self.max_print_count = args.max_print_count
     self.duplist = []
 
   @staticmethod
@@ -53,7 +51,7 @@ class FindDupCLI:
 
   def display(self):
     for i in range(len(self.duplist)):
-      if self.maxnum > 0 and i > self.maxnum:
+      if self.max_print_count > 0 and i > self.max_print_count:
         break
       print('[{index}/{n}] ===> {size}'.format(
           index=i+1,
@@ -71,19 +69,18 @@ class FindDupCLI:
 
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(
-      description="find duplicated files in a list of folders"
-  )
-  parser.add_argument(
-      "-m", "--minisize", type=int, default=0,
-      help="the minimum size of searched file"
-  )
-  parser.add_argument(
-      "-n", "--maxnum", type=int, default=0,
-      help="the maximum item for display"
-  )
-  parser.add_argument("folders", nargs='+', help="list of folders")
+  # codetta: start
+  # python pyargs.py -i 1 \
+  #    -d 'find duplicated Files in a list of folders' \
+  #    m/minisize n/max-print-count
+  # codetta: output
+  import argparse
+  parser = argparse.ArgumentParser(description='find duplicated Files in a list of folders')
+  parser.add_argument('-m', '--minisize', type=int, default=0)
+  parser.add_argument('-n', '--max-print-count', type=int, default=0)
+  parser.add_argument('rest', nargs='+')
   args = parser.parse_args()
+  # codetta: end
 
   cli = FindDupCLI(args)
   cli.apply()
