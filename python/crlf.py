@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import argparse
 import tempfile
 import os
 
@@ -13,8 +12,8 @@ class CrlfCLI:
 
   def __init__(self, args):
     self.force = args.force
-    self.to = args.to
-    self.folders = args.folders
+    self.to_dos = args.to_dos
+    self.folders = args.rest
     self.filelist = []
 
   def mktemp(self, data):
@@ -45,13 +44,13 @@ class CrlfCLI:
       if self.force:
         self.writedata(filename, newdata)
 
-  def towindows(self, filename):
+  def todos(self, filename):
     data = self.readdata(filename)
     if self.NULL in data:
       return
     tempdata = data.replace(self.CRLF, self.NULL)
-    notwindows = (tempdata.find(self.LF) >= 0)
-    if notwindows:
+    notdos = (tempdata.find(self.LF) >= 0)
+    if notdos:
       print(filename)
       newdata = data.replace(self.CRLF, self.LF).replace(self.LF, self.CRLF)
       if self.force:
@@ -64,26 +63,23 @@ class CrlfCLI:
       for root, dirs, files in os.walk(folder):
         for filename in files:
           filepath = os.path.join(root, filename)
-          if self.to == "windows":
-            self.towindows(filepath)
+          if self.to_dos:
+            self.todos(filepath)
           else:
             self.tounix(filepath)
 
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(
-      description="crlf line ending in a list of folders"
-  )
-  parser.add_argument(
-      "-f", "--force", action="store_true",
-      help="force to replace files, otherwise just dry run!"
-  )
-  parser.add_argument(
-      "-t", "--to", type=str, choices=["unix", "windows"],
-      help="change line ending to unix or windows style, default unix!"
-  )
-  parser.add_argument("folders", nargs='+', help="list of folders")
+  # codetta: start
+  # python pyargs.py -i 1 -d 'crlf line ending in a list of folders' fforce tto-dos
+  # codetta: output
+  import argparse
+  parser = argparse.ArgumentParser(description='crlf line ending in a list of folders')
+  parser.add_argument('-f', '--force', action='store_true')
+  parser.add_argument('-t', '--to-dos', action='store_true')
+  parser.add_argument('rest', nargs='+')
   args = parser.parse_args()
+  # codetta: end
 
   cli = CrlfCLI(args)
   cli.apply()

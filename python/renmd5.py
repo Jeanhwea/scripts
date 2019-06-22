@@ -44,13 +44,13 @@ class RenameCLI:
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(
-      description="rename all the files in the list of folders to their md5sum"
+      description='rename all the files in the list of folders to their md5sum'
   )
   parser.add_argument(
-      "-f", "--force", action="store_true",
-      help="force to rename files, otherwise just dry run!"
+      '-f', '--force', action='store_true',
+      help='force to rename files, otherwise just dry run!'
   )
-  parser.add_argument("folders", nargs='+', help="list of folders")
+  parser.add_argument('folders', nargs='+', help='list of folders')
   args = parser.parse_args()
 
   cli = RenameCLI(args)
