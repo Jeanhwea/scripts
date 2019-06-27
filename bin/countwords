@@ -1,33 +1,44 @@
 #!/usr/bin/env sh
 HERE=`cd $(dirname $0); pwd`
 
-__countwords() {
-  # validate basedir
-  if [ ! -d "$1" ]; then
-    echo "$BRED$1$DEFAULT is not exists!"
-    exit -1
-  fi
-  basedir=`cd $1; pwd`
-  iname=$2
-  maxdisplay=20
-  if [ "$#" == "3" ]; then
-    maxdisplay=$3
-  fi
+# codetta: start
+# shargs bbase-dir=. i:iname="'*.txt'" m:max-display=20
+# codetta: output
+base_dir=.
+iname='*.txt'
+max_display=20
+while getopts "bi:m:" opt; do
+  case "${opt}" in
+    b)
+      base_dir=on
+      ;;
+    i)
+      iname=${OPTARG}
+      ;;
+    m)
+      max_display=${OPTARG}
+      ;;
+    *)
+      echo 'options: [-b BASE_DIR] [-i INAME] [-m MAX_DISPLAY]'
+      exit
+      ;;
+  esac
+done
+shift $((OPTIND-1))
+# codetta: end
 
-  # count words
-  find $basedir -type f -iname "$iname" -exec cat {} + \
-    | tr -c '[:alnum:]' '[\n*]'                        \
-    | sed '/^$/d'                                      \
-    | sort                                             \
-    | uniq -c                                          \
-    | sort -nr                                         \
-    | head -$maxdisplay
 
-}
+# validate base_dir
+if [ ! -d "${base_dir}" ]; then
+  echo "$BRED$1$DEFAULT is not exists!"
+  exit -1
+fi
 
-__help() {
-    echo "usage: countwords <basedir> <iname> [<maxdisplay=20>]"
-}
-
-[ $# -lt 2 ] && __help || __countwords $*
-
+# count words
+find ${base_dir} -type f -iname "${iname}" -exec cat {} + \
+  | tr -c '[:alnum:]' '[\n*]'                             \
+  | sed '/^$/d'                                           \
+  | sort                                                  \
+  | uniq -c                                               \
+  | sort -nr                                              \
+  | head -${max_display}

@@ -9,33 +9,33 @@ parser.add_argument("-c", "--change", type=float)
 args = parser.parse_args()
 
 """
+import re
+
+
+def parse_optstr(optstr):
+  regexp = re.match(r'^([A-Za-z]{1}|[A-Za-z]{1}:|[A-Za-z]{1}/)([_A-Za-z][_\-0-9A-Za-z]*)(|=([^=]*))$', optstr)
+  if regexp:
+    return regexp.group(1), regexp.group(2), regexp.group(4)
+  else:
+    return None
 
 
 def add_args(name):
   "fflag for boolean, s:string for string, n/number for int"
-
-  if len(name) <= 2:
-    return "parser.add_argument('-{short_name}')".format(short_name=name[0])
-
-  default = name[name.find('=') + 1:] if name.find('=') >= 0 else None
-
-  if name[1] == '/':  # integer
-    short_name = name[0]
-    full_name = name[2:name.find('=')] if default is not None else name[2:]
-    detail = "type=int{default}".format(
-        default=", default=" + default if default is not None else ', default=0')
-  elif name[1] == ':':  # string
-    short_name = name[0]
-    full_name = name[2:name.find('=')] if default is not None else name[2:]
-    detail = "type=str{default}".format(
-        default=", default='" + default + "'" if default is not None else '')
-  else:
-    short_name = name[0]
-    full_name = name[1:name.find('=')] if default is not None else name[1:]
-    detail = "action='store_true'"
-
-  return "parser.add_argument('-{short_name}', '--{full_name}', {detail})".format(
-      short_name=short_name, full_name=full_name, detail=detail)
+  res = parse_optstr(name)
+  if res:
+    short_name = res[0][0]
+    full_name = res[1]
+    if len(res[0]) < 2:
+      detail = "action='store_true'"
+    elif res[0][1] == '/':
+      detail = "type=int{default}".format(
+          default=", default=" + res[2] if res[2] is not None else ', default=0')
+    elif res[0][1] == ':':
+      detail = "type=str{default}".format(
+          default=", default='" + res[2] + "'" if res[2] is not None else '')
+    return "parser.add_argument('-{short_name}', '--{full_name}', {detail})".format(
+        short_name=short_name, full_name=full_name, detail=detail)
 
 
 def add_parser(args):
@@ -57,8 +57,8 @@ def add_parser(args):
 
 
 def gen_output(args):
-  indent = '  ' * args.indent_level
-  return "\n".join(map(lambda x: indent + x, add_parser(args)))
+  indent = '  '
+  return "\n".join(map(lambda line: indent * args.indent_level + line, add_parser(args)))
 
 
 if __name__ == '__main__':

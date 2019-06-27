@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-'''
+'''parse bash argument, using getopts
+
+fflag          -f FLAG
+a:age=18       -a AGE with default value 18
+n:name=Jack    -n NAME with default value Jack
 
 '''
 
