@@ -63,7 +63,7 @@ def gen_output(args):
 
 if __name__ == '__main__':
   # codetta: start
-  # python pyargs.py -i 1 -d 'genenrate argument parser for python' i/indent-level=0 d:description rrest
+  # python python/pyargs.py -i 1 -d 'genenrate argument parser for python' i/indent-level=0 d:description rrest
   # codetta: output
   import argparse
   parser = argparse.ArgumentParser(description='genenrate argument parser for python')
