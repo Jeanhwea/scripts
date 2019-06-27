@@ -20,9 +20,9 @@ def parse_optstr(optstr):
     return None
 
 
-def add_args(name):
+def add_args(optstr):
   "fflag for boolean, s:string for string, n/number for int"
-  res = parse_optstr(name)
+  res = parse_optstr(optstr)
   if res:
     short_name = res[0][0]
     full_name = res[1]
@@ -46,8 +46,8 @@ def add_parser(args):
     lines.append("parser = argparse.ArgumentParser(description='{desc}')".format(desc=args.description))
   else:
     lines.append("parser = argparse.ArgumentParser()")
-  for name in args.rests:
-    lines.append(add_args(name))
+  for optstr in args.rests:
+    lines.append(add_args(optstr))
   if args.rest:
     lines.append("parser.add_argument('rests', nargs='+')")
   else:
