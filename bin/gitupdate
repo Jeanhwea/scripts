@@ -31,7 +31,7 @@ __git_update() {
   # check if all repositories are clean
   allrepos=()
   dirtyrepos=()
-  for dotgit in `find $basedir -type d -name '.git'`; do
+  for dotgit in `find $basedir -type d -maxdepth 3 -name '.git'`; do
     repodir=`dirname $dotgit`
     allrepos+=("$repodir")
     cd $repodir
