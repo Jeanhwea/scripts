@@ -3,6 +3,7 @@
 import os
 import hashlib
 
+
 class FindDupCLI:
 
   def __init__(self, args):
@@ -54,13 +55,13 @@ class FindDupCLI:
       if self.max_print_count > 0 and i > self.max_print_count:
         break
       print('[{index}/{n}] ===> {size}'.format(
-          index=i+1,
+          index=i + 1,
           n=len(self.duplist),
           size=self.getfilesize(self.duplist[i][0])
       ))
       for j in range(len(self.duplist[i])):
         print('{index}. {name}'.format(
-            index=j+1, name=self.duplist[i][j]
+            index=j + 1, name=self.duplist[i][j]
         ))
 
   def apply(self):
@@ -71,11 +72,11 @@ class FindDupCLI:
 if __name__ == '__main__':
   # codetta: start
   # python pyargs.py -r -i 1 \
-  #    -d 'find duplicated Files in a list of folders' \
+  #    -d 'find duplicated files in a list of folders' \
   #    m/minisize n/max-print-count
   # codetta: output
   import argparse
-  parser = argparse.ArgumentParser(description='find duplicated Files in a list of folders')
+  parser = argparse.ArgumentParser(description='find duplicated files in a list of folders')
   parser.add_argument('-m', '--minisize', type=int, default=0)
   parser.add_argument('-n', '--max-print-count', type=int, default=0)
   parser.add_argument('rests', nargs='+')
