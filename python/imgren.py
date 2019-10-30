@@ -10,6 +10,7 @@ class ImageRenameCLI:
 
   def __init__(self, args):
     self.folders = args.rests
+    self.force = args.force
 
   @staticmethod
   def getfilemd5(filepath):
@@ -35,13 +36,33 @@ class ImageRenameCLI:
 
   @staticmethod
   def target(filepath):
-    return '_'.join([
-        ImageRenameCLI.fmttime(filepath),
-        ImageRenameCLI.getfilemd5(filepath),
-        ImageRenameCLI.imgshape(filepath)])
+    _, ext = os.path.splitext(filepath)
+    timestr = ImageRenameCLI.fmttime(filepath)
+    hashstr = ImageRenameCLI.getfilemd5(filepath)
+    dimstr = ImageRenameCLI.imgshape(filepath)
+    return '_'.join([timestr, hashstr, dimstr]) + ext
+
+  @staticmethod
+  def isimg(filename):
+    return (not filename.startswith('.')) and \
+        (os.path.splitext(filename)[1].lower() in ['.jpg', '.png'])
+
+  def handle(self):
+    for folder in self.folders:
+      for root, dirs, files in os.walk(folder):
+        print('Enter {path}:'.format(path=os.path.abspath(root)))
+        for filename in filter(lambda f: self.isimg(f), files):
+          filepath = os.path.join(root, filename)
+          des = self.target(filepath)
+          if self.force:
+            if filename != des:
+              print("  rename: {src} -> {des}".format(src=filename, des=des))
+              os.rename(filepath, os.path.join(root, des))
+          else:
+            print("  {src} -> {des}".format(src=filename, des=des))
 
   def apply(self):
-    print('apply...')
+    self.handle()
 
 
 if __name__ == '__main__':
