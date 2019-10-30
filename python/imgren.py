@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import os
 import hashlib
+import time
+import cv2 as cv
 
 
 class ImageRenameCLI:
@@ -18,7 +20,25 @@ class ImageRenameCLI:
         if not bits:
           break
         obj.update(bits)
-    return obj.hexdigest()
+    value = obj.hexdigest()
+    return value[0:8]
+
+  @staticmethod
+  def imgshape(filepath):
+    img = cv.imread(filepath)
+    return '{width}x{height}'.format(width=img.shape[1], height=img.shape[0])
+
+  @staticmethod
+  def fmttime(filepath):
+    timestamp = os.path.getmtime(filepath)
+    return time.strftime('%Y%m%d_%H%M%S', time.localtime(timestamp))
+
+  @staticmethod
+  def target(filepath):
+    return '_'.join([
+        ImageRenameCLI.fmttime(filepath),
+        ImageRenameCLI.getfilemd5(filepath),
+        ImageRenameCLI.imgshape(filepath)])
 
   def apply(self):
     print('apply...')
